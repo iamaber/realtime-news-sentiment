@@ -1,6 +1,12 @@
-def main():
-    print("Hello from realtime-news-sentiment!")
+from fastapi import FastAPI
+from news_fetcher import fetch_headlines
+from sentiment import analyze_sentiment
 
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+@app.get("/news-sentiment")
+def get_news_sentiment():
+    headlines = fetch_headlines()
+    sentiments = analyze_sentiment(headlines)
+    results = [{"headline": h, "sentiment": s} for h, s in zip(headlines, sentiments)]
+    return results
