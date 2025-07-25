@@ -4,7 +4,7 @@ from sentiment import analyze_sentiment
 
 app = FastAPI()
 
-@app.get("/news-sentiment")
+@app.get("/")
 def get_news_sentiment():
     headlines = fetch_headlines()
     sentiments = analyze_sentiment(headlines)
