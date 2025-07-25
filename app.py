@@ -1,19 +1,19 @@
 import streamlit as st
 import requests
+import pandas as pd
+import plotly.graph_objects as go
+from collections import Counter
 
-st.title("📰 Real-time News Sentiment Dashboard")
-        
-if st.button("Fetch News Sentiments"):
+st.set_page_config(page_title="News Sentiment Dashboard")
+
+if 'data' not in st.session_state:
     response = requests.get("http://localhost:8000/")
     if response.status_code == 200:
-        data = response.json()
-        for item in data:
-            sentiment = item.get('sentiment', {})
-            label = sentiment.get('label', 'UNKNOWN')
-            score = sentiment.get('score', 0.0)
-
-            st.write(f"**Headline**: {item['headline']}")
-            st.write(f"Sentiment: {label} ({score:.2f})")
-            st.markdown("---")
+        st.session_state.data = response.json()
     else:
         st.error("Failed to fetch data!")
+        st.stop()
+
+df = pd.DataFrame(st.session_state.data)
+st.title("Real-time News Headlines")
+st.dataframe(df[['headline']], use_container_width=True)
