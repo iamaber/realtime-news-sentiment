@@ -16,5 +16,6 @@ def fetch_headlines(urls=None):
         feed = feedparser.parse(url)
         headlines = [entry['title'] for entry in feed.get('entries', [])]
         all_headlines.extend(headlines)
+        all_headlines = list(set(all_headlines))  # Remove duplicates
     
     return all_headlines
