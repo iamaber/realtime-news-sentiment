@@ -28,7 +28,7 @@ This project is a real-time News Sentiment Analysis dashboard built with **FastA
 
 1. **Clone the Repository**
     ```bash
-    git clone https://github.com/yourusername/realtime-news-sentiment.git
+    git clone https://github.com/iamaber/realtime-news-sentiment.git
     cd realtime-news-sentiment
     ```
 
