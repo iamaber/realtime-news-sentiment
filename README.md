@@ -10,21 +10,32 @@ This project is a real-time News Sentiment Analysis dashboard built with **FastA
 - 🖥️ FastAPI-powered backend APIs
 - 📈 Streamlit interactive dashboard frontend
 - ⚡ Uses `uv` for ultra-fast dependency management (optional for local dev)
+- 🏗️ Modular project structure with separate backend and frontend
 
 ## 📂 Project Structure
 
 ```
-.
-├── app.py             # Streamlit frontend dashboard
-├── main.py            # FastAPI backend API
-├── news_fetcher.py    # News headline fetching logic
-├── sentiment.py       # Sentiment analysis logic
-├── requirements.txt   # Python dependencies
-├── pyproject.toml     # uv's dependency file
-└── README.md          # Project documentation
+realtime-news-sentiment/
+├── main.py                    # Main entry point - runs both backend and frontend
+├── backend/                   # Backend API (FastAPI)
+│   ├── __init__.py
+│   ├── api.py                # FastAPI application
+│   └── services/             # Business logic services
+│       ├── __init__.py
+│       ├── news_fetcher.py   # News headline fetching logic
+│       └── sentiment.py     # Sentiment analysis logic
+├── frontend/                 # Frontend dashboard (Streamlit)
+│   ├── __init__.py
+│   └── app.py               # Streamlit dashboard application
+├── requirements.txt         # Python dependencies
+├── pyproject.toml          # uv's dependency file
+├── uv.lock                 # uv lock file
+└── README.md               # Project documentation
 ```
 
-## ⚙️ Installation & Running (Locally with uv)
+## ⚙️ Installation & Running
+
+### Quick Start (Run Everything)
 
 1. **Clone the Repository**
     ```bash
@@ -32,27 +43,56 @@ This project is a real-time News Sentiment Analysis dashboard built with **FastA
     cd realtime-news-sentiment
     ```
 
-2. **Install uv (if not installed)**
+2. **Install Dependencies**
+    
+    With uv (recommended):
     ```bash
+    # Install uv if not installed
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
-
-3. **Sync Dependencies**
-    ```bash
+    
+    # Sync dependencies
     uv pip sync
     ```
-
-4. **Run FastAPI (Backend)**
+    
+    Or with pip:
     ```bash
-    uvicorn main:app --reload --port 8000
+    pip install -r requirements.txt
     ```
-    Backend API: [http://localhost:8000](http://localhost:8000)
 
-5. **Run Streamlit (Frontend)**
-    Open a new terminal and run:
+3. **Run the Complete Application**
     ```bash
-    streamlit run app.py
+    python main.py
     ```
+    This will start both backend and frontend automatically!
+    
+    - 📊 **Frontend Dashboard**: http://localhost:8501
+    - 🔧 **Backend API**: http://localhost:8000
+    - 📖 **API Documentation**: http://localhost:8000/docs
+
+### Advanced Usage
+
+Run components separately:
+
+**Backend Only:**
+```bash
+python main.py --mode backend
+```
+
+**Frontend Only (requires backend running):**
+```bash
+python main.py --mode frontend
+```
+
+**Manual Setup:**
+```bash
+# Terminal 1 - Backend
+cd backend
+uvicorn api:app --reload --port 8000
+
+# Terminal 2 - Frontend
+cd frontend
+streamlit run app.py
+```
 
 ## 📝 Technologies Used
 
@@ -67,16 +107,29 @@ This project is a real-time News Sentiment Analysis dashboard built with **FastA
 
 ## 🛠 How It Works
 
-- **FastAPI Backend**: Serves API endpoints to fetch live headlines and perform sentiment analysis.
-- **Streamlit Frontend**: Visualizes data in an interactive dashboard with sentiment charts.
-- **Sentiment Analysis**: Uses Hugging Face pre-trained models (e.g., `distilbert-base-uncased-finetuned-sst-2-english`).
-- **Dashboard**: Displays sentiment distribution (pie chart) and color-coded sentiment labels for each headline.
+- **Backend (FastAPI)**: 
+  - Located in `/backend/` directory
+  - Serves API endpoints to fetch live headlines and perform sentiment analysis
+  - Modular services architecture with separate news fetching and sentiment analysis
+  - Auto-generated API documentation at `/docs`
+
+- **Frontend (Streamlit)**: 
+  - Located in `/frontend/` directory
+  - Visualizes data in an interactive dashboard with sentiment charts
+  - Connects to backend API for real-time data
+
+- **Sentiment Analysis**: Uses Hugging Face pre-trained models (e.g., `distilbert-base-uncased-finetuned-sst-2-english`)
+
+- **Main Runner**: Single `main.py` file orchestrates both backend and frontend services
 
 ## 🧑‍💻 Development Tips
 
-- Use `uv` for fast dependency management during development.
-- Run `uv pip compile > requirements.txt` to update dependencies.
-- For production Docker builds, dependencies are installed via pip using `requirements.txt`.
+- **Project Structure**: Modular design with separate backend and frontend directories
+- **Single Command Run**: Use `python main.py` to run everything at once
+- **Development Mode**: Use `python main.py --mode backend` or `--mode frontend` for isolated development
+- **Fast Dependencies**: Use `uv` for ultra-fast dependency management during development
+- **API Testing**: Visit http://localhost:8000/docs for interactive API documentation
+- **Hot Reload**: Both backend (uvicorn) and frontend (streamlit) support hot reloading during development
 
 ## 📝 License
 

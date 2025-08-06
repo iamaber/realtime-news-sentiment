@@ -7,11 +7,15 @@ from collections import Counter
 st.set_page_config(page_title="News Sentiment Dashboard")
 
 if "data" not in st.session_state:
-    response = requests.get("http://localhost:8000/")
-    if response.status_code == 200:
-        st.session_state.data = response.json()
-    else:
-        st.error("Failed to fetch data!")
+    try:
+        response = requests.get("http://localhost:8000/")
+        if response.status_code == 200:
+            st.session_state.data = response.json()
+        else:
+            st.error("Failed to fetch data from backend API!")
+            st.stop()
+    except requests.exceptions.ConnectionError:
+        st.error("Could not connect to backend API. Make sure the backend is running on http://localhost:8000")
         st.stop()
 
 df = pd.DataFrame(st.session_state.data)
