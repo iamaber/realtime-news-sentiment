@@ -51,18 +51,33 @@ realtime-news-sentiment/
     curl -LsSf https://astral.sh/uv/install.sh | sh
     
     # Sync dependencies
-    uv pip sync
+    uv sync
     ```
     
     Or with pip:
     ```bash
+    # Create virtual environment
+    python3 -m venv .venv
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+    
+    # Install dependencies
     pip install -r requirements.txt
     ```
 
 3. **Run the Complete Application**
+    
+    With uv:
     ```bash
+    uv run python main.py
+    ```
+    
+    Or with activated virtual environment:
+    ```bash
+    # If using pip, make sure virtual environment is activated
+    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
     python main.py
     ```
+    
     This will start both backend and frontend automatically!
     
     - 📊 **Frontend Dashboard**: http://localhost:8501
@@ -75,11 +90,21 @@ Run components separately:
 
 **Backend Only:**
 ```bash
+# With uv
+uv run python main.py --mode backend
+
+# With virtual environment
+source .venv/bin/activate
 python main.py --mode backend
 ```
 
 **Frontend Only (requires backend running):**
 ```bash
+# With uv
+uv run python main.py --mode frontend
+
+# With virtual environment
+source .venv/bin/activate
 python main.py --mode frontend
 ```
 
@@ -87,23 +112,29 @@ python main.py --mode frontend
 ```bash
 # Terminal 1 - Backend
 cd backend
-uvicorn api:app --reload --port 8000
+# With uv
+uv run uvicorn api:app --reload --port 8000
+# Or with venv: source ../.venv/bin/activate && uvicorn api:app --reload --port 8000
 
 # Terminal 2 - Frontend
 cd frontend
-streamlit run app.py
+# With uv
+uv run streamlit run app.py
+# Or with venv: source ../.venv/bin/activate && streamlit run app.py
 ```
 
 ## 📝 Technologies Used
 
-- Python 3.12
+- Python 3.12+
 - FastAPI
 - Streamlit
 - Transformers (Hugging Face)
 - PyTorch
 - Feedparser
 - Plotly
-- uv
+- Pandas
+- Requests
+- uv (package manager)
 
 ## 🛠 How It Works
 
@@ -125,11 +156,31 @@ streamlit run app.py
 ## 🧑‍💻 Development Tips
 
 - **Project Structure**: Modular design with separate backend and frontend directories
-- **Single Command Run**: Use `python main.py` to run everything at once
-- **Development Mode**: Use `python main.py --mode backend` or `--mode frontend` for isolated development
-- **Fast Dependencies**: Use `uv` for ultra-fast dependency management during development
+- **Single Command Run**: Use `uv run python main.py` or `python main.py` (with activated venv) to run everything at once
+- **Development Mode**: Use `--mode backend` or `--mode frontend` flags for isolated development
+- **Package Management**: Use `uv` for ultra-fast dependency management during development
+- **Virtual Environment**: Project uses `.venv` directory for isolated dependencies
 - **API Testing**: Visit http://localhost:8000/docs for interactive API documentation
 - **Hot Reload**: Both backend (uvicorn) and frontend (streamlit) support hot reloading during development
+- **Dependencies**: Optimized to include only essential packages (removed unused httpx, mangum, python-dotenv)
+
+## 🔧 Troubleshooting
+
+**Module Not Found Errors:**
+- Make sure you're running commands with `uv run` or have activated the virtual environment
+- Verify dependencies are installed: `uv sync` or `pip install -r requirements.txt`
+
+**Port Already in Use:**
+- Backend runs on port 8000, frontend on port 8501
+- Kill existing processes: `pkill -f uvicorn` or `pkill -f streamlit`
+
+**Model Download Issues:**
+- First run downloads Hugging Face models (~268MB)
+- Ensure stable internet connection for initial setup
+
+**Virtual Environment Issues:**
+- For uv: Run `uv sync` to recreate environment
+- For pip: Delete `.venv` folder and recreate with `python3 -m venv .venv`
 
 ## 📝 License
 
